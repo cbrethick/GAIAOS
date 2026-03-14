@@ -1,0 +1,67 @@
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(5, 8, 16, 0.7);
+}
+
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.nav-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-primary);
+  text-decoration: none;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: text-shadow 0.3s ease;
+}
+
+.nav-logo:hover {
+  text-shadow: 0 0 10px var(--accent-glow);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 1.1rem;
+  gap: 0.5rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-link:hover {
+  color: var(--text-primary);
+  transform: translateY(-2px);
+}
+
+.nav-link.active {
+  color: var(--accent-base);
+  text-shadow: 0 0 8px var(--accent-glow);
+}
+
+.nav-link svg {
+  transition: transform 0.3s ease;
+}
+
+.nav-link:hover svg {
+  transform: rotate(15deg);
+}
+
+/* Page spacing to account for fixed nav */
+main {
+  padding-top: 5rem;
+  min-height: 100vh;
+}

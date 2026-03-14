@@ -1,0 +1,230 @@
+.research-page {
+  padding-bottom: 4rem;
+}
+
+.research-header {
+  text-align: center;
+  margin: 3rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 900px;
+}
+
+.header-icon {
+  color: var(--accent-base);
+  margin-bottom: 0.5rem;
+}
+
+.research-header h1 {
+  font-size: 3rem;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.research-header .subtitle {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  text-align: justify;
+  margin-bottom: 1rem;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+/* Module Layout */
+.module-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  margin-bottom: 5rem;
+}
+
+.research-module {
+  padding: 3rem;
+  border-left: 4px solid var(--accent-base);
+}
+
+.module-content {
+  display: flex;
+  gap: 4rem;
+  align-items: stretch;
+}
+
+/* Alternating layout */
+.module-content.reverse {
+  flex-direction: row-reverse;
+}
+
+.module-text {
+  flex: 1.2;
+}
+
+.module-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.module-title h2 {
+  font-size: 2rem;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.module-text p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+  text-align: justify;
+}
+
+.module-visuals {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.module-image {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  object-fit: contain;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+/* Architecture Pipeline Diagram */
+.model-diagram {
+  padding: 1.5rem;
+  background: rgba(10, 15, 25, 0.8);
+}
+
+.model-diagram h4 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--accent-base);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.diagram-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.flow-box {
+  width: 100%;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.flow-box.highlight {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: var(--accent-base);
+  color: var(--text-primary);
+  font-weight: bold;
+}
+
+.flow-box.result {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: var(--color-safe);
+  color: var(--text-primary);
+}
+
+.flow-arrow {
+  color: var(--text-muted);
+  font-weight: bold;
+}
+
+/* Icon colors based on modules */
+.icon-flood { color: var(--color-safe); }
+.icon-climate { color: var(--color-cold); }
+.icon-crop { color: var(--color-caution); }
+.icon-wildfire { color: var(--color-danger); }
+.icon-traffic { color: var(--color-warning); }
+.icon-db { color: var(--accent-base); }
+
+
+/* Infrastructure Section */
+.infra-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.shared-infra {
+  padding: 3rem;
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card-top h2 {
+  font-size: 1.8rem;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.card-content h4 {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.card-content p, .evaluation-box p, .integration-box p {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+.col-split {
+  display: flex;
+  gap: 2rem;
+}
+
+.evaluation-box, .integration-box {
+  flex: 1;
+  padding: 2.5rem;
+  border-top: 2px solid var(--border-focus);
+}
+
+.evaluation-box h2, .integration-box h2 {
+  font-size: 1.5rem;
+  color: var(--accent-base);
+  margin-bottom: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .module-content, .module-content.reverse {
+    flex-direction: column;
+  }
+  
+  .col-split {
+    flex-direction: column;
+  }
+}

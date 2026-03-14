@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="earthGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="60%" stop-color="#0a192f"/>
+      <stop offset="90%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </radialGradient>
+    <linearGradient id="orbitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.2"/>
+      <stop offset="50%" stop-color="#3b82f6" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#60a5fa" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Dark Space Background Circle -->
+  <circle cx="50" cy="50" r="48" fill="#050810" />
+
+  <!-- Glowing Earth Core -->
+  <circle cx="50" cy="50" r="28" fill="url(#earthGlow)" />
+  
+  <!-- Abstract Continent Shapes -->
+  <path d="M 40,32 Q 45,30 48,35 T 55,30 Q 60,32 58,40 T 65,45 Q 68,52 62,55 T 58,68 Q 50,65 48,60 T 42,55 Q 35,52 38,45 T 40,32 Z" fill="#10b981" opacity="0.8" />
+  
+  <path d="M 32,58 Q 30,62 38,65 Q 40,60 32,58 Z" fill="#10b981" opacity="0.6" />
+  <path d="M 68,35 Q 72,40 68,45 Q 65,42 68,35 Z" fill="#10b981" opacity="0.6" />
+
+  <!-- Orbit Rings (AI/Monitoring aspect) -->
+  <ellipse cx="50" cy="50" rx="38" ry="12" fill="none" stroke="url(#orbitGrad)" stroke-width="2" transform="rotate(-30 50 50)" />
+  <ellipse cx="50" cy="50" rx="42" ry="16" fill="none" stroke="url(#orbitGrad)" stroke-width="1.5" transform="rotate(45 50 50)" opacity="0.7" />
+
+  <!-- Data Node Markers -->
+  <circle cx="18" cy="32" r="2.5" fill="#facc15" />
+  <circle cx="82" cy="68" r="2.5" fill="#60a5fa" />
+  <circle cx="75" cy="20" r="2" fill="#ef4444" />
+</svg>
