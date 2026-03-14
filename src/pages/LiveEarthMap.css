@@ -1,14 +1,19 @@
 .map-page-container {
   position: relative;
-  height: calc(100vh - 5rem);
+  min-height: calc(100vh - 5rem);
   width: 100vw;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   background-color: var(--bg-space);
+  display: flex;
+  flex-direction: column;
 }
 
 .map-wrapper {
-  height: 100%;
+  height: calc(100vh - 5rem);
   width: 100%;
+  flex-shrink: 0;
+  position: relative;
 }
 
 /* Module Controls */
@@ -258,4 +263,57 @@
   background: rgba(59, 130, 246, 0.2);
   color: var(--text-primary);
   font-weight: bold;
+}
+
+/* --- Dashboard Charts Section --- */
+.dashboard-charts-section {
+  padding: 4rem 1.5rem;
+  background: var(--bg-space);
+}
+
+.section-header {
+  margin-bottom: 3rem;
+  border-left: 4px solid var(--accent-base);
+  padding-left: 1.5rem;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.section-header p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 2rem;
+}
+
+.chart-card {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-card h3 {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.chart-wrapper {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
 }

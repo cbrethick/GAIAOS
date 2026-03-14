@@ -1,0 +1,2469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GaiaOS — Earth Digital Twin AI</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050a0f;
+            --bg2: #0a1520;
+            --bg3: #0f1f2e;
+            --card: #0d1b27;
+            --border: rgba(0, 200, 255, 0.12);
+            --border2: rgba(0, 200, 255, 0.25);
+            --accent: #00c8ff;
+            --accent2: #00ff9d;
+            --text: #e8f4f8;
+            --muted: #6a8fa0;
+            --flood: #0088ff;
+            --climate: #8855ff;
+            --crop: #00cc66;
+            --fire: #ff4422;
+            --traffic: #ffaa00;
+            --mono: 'Space Mono', monospace;
+            --sans: 'Syne', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            overflow-x: hidden;
+            min-height: 100vh
+        }
+
+        /* GRID BG */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(0, 200, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 200, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0
+        }
+
+        /* HEADER */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(5, 10, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border: 1.5px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: .6
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -.5px
+        }
+
+        .logo-text span {
+            color: var(--accent)
+        }
+
+        .logo-sub {
+            font-size: 11px;
+            color: var(--muted);
+            font-family: var(--mono);
+            letter-spacing: .1em
+        }
+
+        nav {
+            display: flex;
+            gap: 4px
+        }
+
+        .nav-btn {
+            padding: 7px 14px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            font-family: var(--sans);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all .2s
+        }
+
+        .nav-btn:hover,
+        .nav-btn.on {
+            background: rgba(0, 200, 255, 0.1);
+            color: var(--accent)
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--accent2)
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent2);
+            animation: pulse 2s infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1)
+            }
+
+            50% {
+                opacity: .5;
+                transform: scale(1.3)
+            }
+        }
+
+        /* MAIN */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px;
+            position: relative;
+            z-index: 1
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 48px 0 40px
+        }
+
+        .hero-eyebrow {
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: .2em;
+            color: var(--accent);
+            margin-bottom: 16px;
+            text-transform: uppercase
+        }
+
+        .hero-title {
+            font-size: clamp(36px, 5vw, 72px);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -2px;
+            margin-bottom: 16px
+        }
+
+        .hero-title .earth {
+            color: var(--accent)
+        }
+
+        .hero-title .twin {
+            color: var(--accent2)
+        }
+
+        .hero-desc {
+            font-size: 16px;
+            color: var(--muted);
+            max-width: 600px;
+            margin: 0 auto 32px;
+            line-height: 1.7
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap
+        }
+
+        .stat {
+            text-align: center
+        }
+
+        .stat-num {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--accent)
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--muted);
+            font-family: var(--mono);
+            letter-spacing: .1em;
+            margin-top: 2px
+        }
+
+        /* SECTION */
+        .sec-title {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .sec-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border)
+        }
+
+        /* MODULE TABS */
+        .mod-tabs {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 20px
+        }
+
+        .mod-tab {
+            padding: 8px 18px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .mod-tab .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%
+        }
+
+        .mod-tab:hover {
+            border-color: var(--border2)
+        }
+
+        .mod-tab.on {
+            color: #fff
+        }
+
+        .mod-tab[data-m="flood"].on {
+            border-color: var(--flood);
+            background: rgba(0, 136, 255, 0.12);
+            color: var(--flood)
+        }
+
+        .mod-tab[data-m="climate"].on {
+            border-color: var(--climate);
+            background: rgba(136, 85, 255, 0.12);
+            color: var(--climate)
+        }
+
+        .mod-tab[data-m="crop"].on {
+            border-color: var(--crop);
+            background: rgba(0, 204, 102, 0.12);
+            color: var(--crop)
+        }
+
+        .mod-tab[data-m="fire"].on {
+            border-color: var(--fire);
+            background: rgba(255, 68, 34, 0.12);
+            color: var(--fire)
+        }
+
+        .mod-tab[data-m="traffic"].on {
+            border-color: var(--traffic);
+            background: rgba(255, 170, 0, 0.12);
+            color: var(--traffic)
+        }
+
+        /* MODULE PANEL */
+        .mod-panel {
+            display: none
+        }
+
+        .mod-panel.on {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px
+        }
+
+        @media(max-width:900px) {
+            .mod-panel.on {
+                grid-template-columns: 1fr
+            }
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 22px
+        }
+
+        .card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px
+        }
+
+        .card-label {
+            font-size: 11px;
+            font-family: var(--mono);
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            color: var(--muted)
+        }
+
+        .card-badge {
+            font-size: 10px;
+            font-family: var(--mono);
+            padding: 3px 8px;
+            border-radius: 4px;
+            letter-spacing: .05em
+        }
+
+        .card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 6px
+        }
+
+        .card p {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6
+        }
+
+        /* ROW ITEMS */
+        .row-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0
+        }
+
+        .row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .row:last-child {
+            border-bottom: none
+        }
+
+        .row-key {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--muted);
+            min-width: 110px;
+            padding-top: 2px;
+            flex-shrink: 0
+        }
+
+        .row-val {
+            font-size: 13px;
+            line-height: 1.55;
+            color: var(--text)
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-family: var(--mono);
+            margin: 2px 2px 2px 0;
+            letter-spacing: .04em
+        }
+
+        /* OUTPUT PREVIEW */
+        .output-box {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden
+        }
+
+        .output-topbar {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--muted)
+        }
+
+        .output-topbar .dot-r {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--fire);
+            margin-right: 4px
+        }
+
+        .output-topbar .dot-y {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--traffic)
+        }
+
+        .output-topbar .dot-g {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--crop)
+        }
+
+        .map-area {
+            height: 220px;
+            position: relative;
+            background: var(--bg3);
+            overflow: hidden
+        }
+
+        .map-svg {
+            width: 100%;
+            height: 100%
+        }
+
+        .risk-legend {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(5, 10, 15, .85);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-family: var(--mono);
+            font-size: 10px
+        }
+
+        .leg-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+            color: var(--muted)
+        }
+
+        .leg-row:last-child {
+            margin-bottom: 0
+        }
+
+        .leg-swatch {
+            width: 14px;
+            height: 8px;
+            border-radius: 2px
+        }
+
+        .chart-area {
+            padding: 14px 16px
+        }
+
+        .chart-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--muted);
+            margin-bottom: 8px
+        }
+
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 5px
+        }
+
+        .bc-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--mono);
+            font-size: 10px
+        }
+
+        .bc-label {
+            width: 60px;
+            color: var(--muted);
+            text-align: right;
+            flex-shrink: 0
+        }
+
+        .bc-track {
+            flex: 1;
+            height: 12px;
+            background: rgba(255, 255, 255, .05);
+            border-radius: 3px;
+            overflow: hidden
+        }
+
+        .bc-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease
+        }
+
+        .bc-val {
+            width: 36px;
+            color: var(--text);
+            text-align: right
+        }
+
+        /* FULL-WIDTH SECTIONS */
+        .full-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px 24px;
+            margin-bottom: 20px
+        }
+
+        /* DATASET TABLE */
+        .ds-table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        .ds-table th {
+            text-align: left;
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: .1em;
+            color: var(--muted);
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase
+        }
+
+        .ds-table td {
+            padding: 10px 12px;
+            font-size: 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            line-height: 1.5
+        }
+
+        .ds-table tr:last-child td {
+            border-bottom: none
+        }
+
+        .ds-table tr:hover td {
+            background: rgba(0, 200, 255, .03)
+        }
+
+        .ds-name {
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap
+        }
+
+        .ds-src {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--accent)
+        }
+
+        /* TOOLS GRID */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px
+        }
+
+        .tool-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            transition: border-color .2s
+        }
+
+        .tool-card:hover {
+            border-color: var(--border2)
+        }
+
+        .tool-cat {
+            font-family: var(--mono);
+            font-size: 9px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            margin-bottom: 6px
+        }
+
+        .tool-name {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 3px
+        }
+
+        .tool-desc {
+            font-size: 11px;
+            color: var(--muted);
+            line-height: 1.5
+        }
+
+        /* ARCHITECTURE */
+        .arch-flow {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            overflow-x: auto;
+            padding: 10px 0
+        }
+
+        .arch-block {
+            flex-shrink: 0;
+            width: 160px;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            margin-right: 0
+        }
+
+        .arch-arrow {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            color: var(--muted);
+            font-size: 18px
+        }
+
+        .arch-cat {
+            font-family: var(--mono);
+            font-size: 9px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            margin-bottom: 6px
+        }
+
+        .arch-title {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px
+        }
+
+        .arch-items {
+            font-size: 11px;
+            color: var(--muted);
+            line-height: 1.7
+        }
+
+        /* WEBSITE SECTION */
+        .website-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px
+        }
+
+        @media(max-width:700px) {
+            .website-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .ws-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden
+        }
+
+        .ws-preview {
+            height: 140px;
+            background: var(--bg3);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .ws-info {
+            padding: 14px 16px
+        }
+
+        .ws-title {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 4px
+        }
+
+        .ws-desc {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5
+        }
+
+        /* TIMELINE */
+        .timeline {
+            position: relative;
+            padding-left: 28px
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 8px;
+            bottom: 8px;
+            width: 1px;
+            background: var(--border)
+        }
+
+        .tl-item {
+            position: relative;
+            margin-bottom: 20px
+        }
+
+        .tl-dot {
+            position: absolute;
+            left: -24px;
+            top: 6px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--bg)
+        }
+
+        .tl-dot.done {
+            background: var(--accent2);
+            border-color: var(--accent2)
+        }
+
+        .tl-dot.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent)
+        }
+
+        .tl-month {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: .1em;
+            margin-bottom: 3px
+        }
+
+        .tl-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 4px
+        }
+
+        .tl-desc {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.6
+        }
+
+        /* INSTALL */
+        .install-block {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden
+        }
+
+        .install-bar {
+            padding: 8px 14px;
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .install-code {
+            padding: 16px 20px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 2;
+            color: var(--text);
+            overflow-x: auto
+        }
+
+        .install-code .cm {
+            color: var(--muted)
+        }
+
+        .install-code .kw {
+            color: var(--accent)
+        }
+
+        .install-code .str {
+            color: var(--accent2)
+        }
+
+        /* OUTPUT ROW */
+        .output-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-top: 16px
+        }
+
+        @media(max-width:1000px) {
+            .output-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+        .out-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center
+        }
+
+        .out-icon {
+            font-size: 28px;
+            margin-bottom: 8px
+        }
+
+        .out-title {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 4px
+        }
+
+        .out-desc {
+            font-size: 11px;
+            color: var(--muted);
+            line-height: 1.5
+        }
+
+        /* SECTION MARGIN */
+        .sec {
+            margin-bottom: 40px
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg)
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border2);
+            border-radius: 3px
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .mod-panel.on {
+            animation: fadeIn .3s ease
+        }
+
+        /* INDIA MAP SVG paths — simplified */
+        .district {
+            stroke: rgba(0, 200, 255, .15);
+            stroke-width: .5;
+            transition: fill .3s
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-inner">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <div>
+                    <div class="logo-text">Gaia<span>OS</span></div>
+                    <div class="logo-sub">Earth Digital Twin AI</div>
+                </div>
+            </div>
+            <nav>
+                <button class="nav-btn on" onclick="scrollTo(0,0)">Overview</button>
+                <button class="nav-btn"
+                    onclick="document.getElementById('modules-sec').scrollIntoView({behavior:'smooth'})">Modules</button>
+                <button class="nav-btn"
+                    onclick="document.getElementById('datasets-sec').scrollIntoView({behavior:'smooth'})">Datasets</button>
+                <button class="nav-btn"
+                    onclick="document.getElementById('tools-sec').scrollIntoView({behavior:'smooth'})">Tools</button>
+                <button class="nav-btn"
+                    onclick="document.getElementById('website-sec').scrollIntoView({behavior:'smooth'})">Website</button>
+                <button class="nav-btn"
+                    onclick="document.getElementById('timeline-sec').scrollIntoView({behavior:'smooth'})">Timeline</button>
+            </nav>
+            <div class="status">
+                <div class="status-dot"></div>
+                LIVE SYSTEM · 5 MODULES
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- HERO -->
+        <div class="hero">
+            <div class="hero-eyebrow">Data Science Student Project · India Focus</div>
+            <h1 class="hero-title">
+                <span class="earth">Earth</span> Digital<br><span class="twin">Twin</span> AI
+            </h1>
+            <p class="hero-desc">One unified AI system predicting climate, floods, crop yields, wildfires, and city
+                growth — trained on free public data, deployed as a live website.</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-num">5</div>
+                    <div class="stat-label">Prediction Modules</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">10</div>
+                    <div class="stat-label">Free Datasets</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">25+</div>
+                    <div class="stat-label">Tools & Libraries</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">9mo</div>
+                    <div class="stat-label">Build Timeline</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">₹0</div>
+                    <div class="stat-label">Cost to Build</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULES -->
+        <div class="sec" id="modules-sec">
+            <div class="sec-title">All 5 Prediction Modules</div>
+
+            <div class="mod-tabs">
+                <button class="mod-tab on" data-m="flood" onclick="selMod('flood')">
+                    <div class="dot" style="background:var(--flood)"></div> Flood Probability
+                </button>
+                <button class="mod-tab" data-m="climate" onclick="selMod('climate')">
+                    <div class="dot" style="background:var(--climate)"></div> Climate Patterns
+                </button>
+                <button class="mod-tab" data-m="crop" onclick="selMod('crop')">
+                    <div class="dot" style="background:var(--crop)"></div> Crop Yield
+                </button>
+                <button class="mod-tab" data-m="fire" onclick="selMod('fire')">
+                    <div class="dot" style="background:var(--fire)"></div> Wildfire Risk
+                </button>
+                <button class="mod-tab" data-m="traffic" onclick="selMod('traffic')">
+                    <div class="dot" style="background:var(--traffic)"></div> Traffic & City Growth
+                </button>
+            </div>
+
+            <!-- FLOOD -->
+            <div class="mod-panel on" id="panel-flood">
+                <div>
+                    <div class="card" style="margin-bottom:12px">
+                        <div class="card-head">
+                            <span class="card-label">Module 01</span>
+                            <span class="card-badge" style="background:rgba(0,136,255,.15);color:var(--flood)">PRIORITY
+                                BUILD</span>
+                        </div>
+                        <h3 style="color:var(--flood)">Flood Probability Forecasting</h3>
+                        <p>Predicts 0–100% flood inundation probability per district across India, 72 hours ahead. Uses
+                            rainfall + terrain + soil saturation signals fused together.</p>
+                        <div class="row-list" style="margin-top:14px">
+                            <div class="row">
+                                <div class="row-key">GOAL</div>
+                                <div class="row-val">72-hour flood risk map, district-level, 0–100% probability</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">MODEL</div>
+                                <div class="row-val">Phase 1: XGBoost (tabular) → Phase 2: ConvLSTM (spatial grids) →
+                                    Phase 3: Physics-informed U-Net</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">INPUTS</div>
+                                <div class="row-val">7-day cumulative rainfall · soil moisture · elevation · river
+                                    discharge · land use type · slope</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">LABELS</div>
+                                <div class="row-val">NDMA historical flood events · Sentinel-1 SAR inundation masks ·
+                                    IMD observed data</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">HARD PART</div>
+                                <div class="row-val">SAR preprocessing (speckle filter + terrain correction). Class
+                                    imbalance — only 0.8% days have floods. Use focal loss.</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">DATASETS</div>
+                                <div class="row-val">
+                                    <span class="tag"
+                                        style="background:rgba(0,136,255,.15);color:var(--flood)">ERA5</span>
+                                    <span class="tag"
+                                        style="background:rgba(0,136,255,.15);color:var(--flood)">SMAP</span>
+                                    <span class="tag" style="background:rgba(0,136,255,.15);color:var(--flood)">SRTM
+                                        DEM</span>
+                                    <span class="tag"
+                                        style="background:rgba(0,136,255,.15);color:var(--flood)">Sentinel-1 SAR</span>
+                                    <span class="tag"
+                                        style="background:rgba(0,136,255,.15);color:var(--flood)">GloFAS</span>
+                                    <span class="tag" style="background:rgba(0,136,255,.15);color:var(--flood)">Kerala
+                                        2018 CSV</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">TOOLS</div>
+                                <div class="row-val">xarray · rasterio · XGBoost · PyTorch · geopandas · SNAP (SAR)
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">BEAT</div>
+                                <div class="row-val">IMD operational forecast + naive persistence. Target: +0.05 AUC
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="card" style="margin-bottom:12px">
+                        <div class="card-label" style="margin-bottom:12px">SAMPLE OUTPUT</div>
+                        <div class="output-box">
+                            <div class="output-topbar">
+                                <div class="dot-r"></div>
+                                <div class="dot-y"></div>
+                                <div class="dot-g"></div>
+                                GaiaOS · Flood Risk · India · +72hr
+                            </div>
+                            <div class="map-area">
+                                <svg class="map-svg" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="400" height="220" fill="#0a1520" />
+                                    <!-- simplified India districts with risk colors -->
+                                    <ellipse cx="200" cy="110" rx="130" ry="100" fill="rgba(0,136,255,0.08)"
+                                        stroke="rgba(0,200,255,0.2)" stroke-width="0.5" />
+                                    <!-- High risk zones (NE, Kerala) -->
+                                    <ellipse cx="305" cy="80" rx="28" ry="22" fill="rgba(255,68,34,0.55)"
+                                        stroke="rgba(255,68,34,0.4)" stroke-width="0.5" />
+                                    <ellipse cx="170" cy="170" rx="20" ry="16" fill="rgba(255,68,34,0.5)"
+                                        stroke="rgba(255,68,34,0.4)" stroke-width="0.5" />
+                                    <!-- Medium risk -->
+                                    <ellipse cx="250" cy="100" rx="25" ry="20" fill="rgba(255,170,0,0.45)"
+                                        stroke="rgba(255,170,0,0.3)" stroke-width="0.5" />
+                                    <ellipse cx="190" cy="75" rx="22" ry="18" fill="rgba(255,170,0,0.4)"
+                                        stroke="rgba(255,170,0,0.3)" stroke-width="0.5" />
+                                    <!-- Low risk -->
+                                    <ellipse cx="150" cy="100" rx="35" ry="28" fill="rgba(0,136,255,0.25)"
+                                        stroke="rgba(0,136,255,0.2)" stroke-width="0.5" />
+                                    <ellipse cx="220" cy="135" rx="30" ry="22" fill="rgba(0,204,102,0.25)"
+                                        stroke="rgba(0,204,102,0.15)" stroke-width="0.5" />
+                                    <!-- Grid lines -->
+                                    <line x1="0" y1="55" x2="400" y2="55" stroke="rgba(0,200,255,0.06)"
+                                        stroke-width="0.5" />
+                                    <line x1="0" y1="110" x2="400" y2="110" stroke="rgba(0,200,255,0.06)"
+                                        stroke-width="0.5" />
+                                    <line x1="0" y1="165" x2="400" y2="165" stroke="rgba(0,200,255,0.06)"
+                                        stroke-width="0.5" />
+                                    <line x1="100" y1="0" x2="100" y2="220" stroke="rgba(0,200,255,0.06)"
+                                        stroke-width="0.5" />
+                                    <line x1="200" y1="0" x2="200" y2="220" stroke="rgba(0,200,255,0.06)"
+                                        stroke-width="0.5" />
+                                    <line x1="300" y1="0" x2="300" y2="220" stroke="rgba(0,200,255,0.06)"
+                                        stroke-width="0.5" />
+                                    <!-- Labels -->
+                                    <text x="297" y="78" fill="white" font-size="8" font-family="monospace"
+                                        text-anchor="middle">ASSAM</text>
+                                    <text x="297" y="87" fill="rgba(255,100,80,1)" font-size="7" font-family="monospace"
+                                        text-anchor="middle">87% RISK</text>
+                                    <text x="170" y="168" fill="white" font-size="8" font-family="monospace"
+                                        text-anchor="middle">KERALA</text>
+                                    <text x="170" y="177" fill="rgba(255,100,80,1)" font-size="7"
+                                        font-family="monospace" text-anchor="middle">79% RISK</text>
+                                    <text x="248" y="99" fill="white" font-size="7" font-family="monospace"
+                                        text-anchor="middle">BIHAR</text>
+                                    <text x="248" y="108" fill="rgba(255,170,0,1)" font-size="7" font-family="monospace"
+                                        text-anchor="middle">54%</text>
+                                    <text x="150" y="100" fill="rgba(180,220,255,0.9)" font-size="7"
+                                        font-family="monospace" text-anchor="middle">RAJASTHAN</text>
+                                    <text x="150" y="109" fill="rgba(0,136,255,1)" font-size="7" font-family="monospace"
+                                        text-anchor="middle">21%</text>
+                                    <!-- Scan line effect -->
+                                    <rect width="400" height="220" fill="url(#scan)" opacity="0.3" />
+                                    <defs>
+                                        <pattern id="scan" width="400" height="3" patternUnits="userSpaceOnUse">
+                                            <rect width="400" height="1" fill="rgba(0,200,255,0.04)" />
+                                        </pattern>
+                                    </defs>
+                                </svg>
+                                <div class="risk-legend">
+                                    <div class="leg-row">
+                                        <div class="leg-swatch" style="background:rgba(255,68,34,0.7)"></div>High risk
+                                        70–100%
+                                    </div>
+                                    <div class="leg-row">
+                                        <div class="leg-swatch" style="background:rgba(255,170,0,0.7)"></div>Medium
+                                        40–70%
+                                    </div>
+                                    <div class="leg-row">
+                                        <div class="leg-swatch" style="background:rgba(0,136,255,0.7)"></div>Low 0–40%
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chart-area">
+                                <div class="chart-label">MODEL ACCURACY vs BASELINES</div>
+                                <div class="bar-chart">
+                                    <div class="bc-row">
+                                        <div class="bc-label">GaiaOS</div>
+                                        <div class="bc-track">
+                                            <div class="bc-fill" style="width:87%;background:var(--flood)"></div>
+                                        </div>
+                                        <div class="bc-val">0.87</div>
+                                    </div>
+                                    <div class="bc-row">
+                                        <div class="bc-label">XGBoost</div>
+                                        <div class="bc-track">
+                                            <div class="bc-fill" style="width:76%;background:rgba(0,136,255,0.5)"></div>
+                                        </div>
+                                        <div class="bc-val">0.76</div>
+                                    </div>
+                                    <div class="bc-row">
+                                        <div class="bc-label">IMD base</div>
+                                        <div class="bc-track">
+                                            <div class="bc-fill" style="width:62%;background:rgba(100,140,180,0.4)">
+                                            </div>
+                                        </div>
+                                        <div class="bc-val">0.62</div>
+                                    </div>
+                                    <div class="bc-row">
+                                        <div class="bc-label">Persistence</div>
+                                        <div class="bc-track">
+                                            <div class="bc-fill" style="width:41%;background:rgba(100,140,180,0.25)">
+                                            </div>
+                                        </div>
+                                        <div class="bc-val">0.41</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CLIMATE -->
+            <div class="mod-panel" id="panel-climate">
+                <div>
+                    <div class="card">
+                        <div class="card-head">
+                            <span class="card-label">Module 02</span>
+                            <span class="card-badge" style="background:rgba(136,85,255,.15);color:var(--climate)">SWIN
+                                TRANSFORMER</span>
+                        </div>
+                        <h3 style="color:var(--climate)">Climate Pattern Forecasting</h3>
+                        <p>Predicts temperature anomalies, monsoon onset date, and drought index 30 days ahead at 25km
+                            grid resolution across India.</p>
+                        <div class="row-list" style="margin-top:14px">
+                            <div class="row">
+                                <div class="row-key">GOAL</div>
+                                <div class="row-val">30-day temperature anomaly map + monsoon onset ±5 days + drought
+                                    index per district</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">MODEL</div>
+                                <div class="row-val">Swin Transformer on 3D ERA5 pressure-level grids. Seq2seq: past 30
+                                    days → next 30 days</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">INPUTS</div>
+                                <div class="row-val">ERA5: temperature, wind u/v, geopotential, specific humidity at 5
+                                    pressure levels, SST anomalies, sea ice</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">LABELS</div>
+                                <div class="row-val">ERA5 future states (self-supervised). IMD monsoon onset dates
+                                    1950–2024</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">HARD PART</div>
+                                <div class="row-val">Non-stationarity — 2024 climate ≠ 1990 climate. Time-weighted
+                                    sampling + trend-aware normalization required</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">DATASETS</div>
+                                <div class="row-val">
+                                    <span class="tag" style="background:rgba(136,85,255,.15);color:var(--climate)">ERA5
+                                        (multi-level)</span>
+                                    <span class="tag" style="background:rgba(136,85,255,.15);color:var(--climate)">NOAA
+                                        SST</span>
+                                    <span class="tag"
+                                        style="background:rgba(136,85,255,.15);color:var(--climate)">CHIRPS
+                                        rainfall</span>
+                                    <span class="tag" style="background:rgba(136,85,255,.15);color:var(--climate)">IMD
+                                        monsoon records</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">TOOLS</div>
+                                <div class="row-val">PyTorch · timm (Swin-T) · xarray · einops · Weights & Biases</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">OUTPUT</div>
+                                <div class="row-val">Animated 30-day anomaly maps, monsoon onset probability bell curve,
+                                    SPI drought map</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="card">
+                        <div class="card-label" style="margin-bottom:12px">SAMPLE OUTPUT</div>
+                        <div class="output-box">
+                            <div class="output-topbar">
+                                <div class="dot-r"></div>
+                                <div class="dot-y"></div>
+                                <div class="dot-g"></div>
+                                GaiaOS · Climate Anomaly · +30 Day Forecast
+                            </div>
+                            <div class="map-area">
+                                <svg class="map-svg" viewBox="0 0 400 220">
+                                    <rect width="400" height="220" fill="#0a1520" />
+                                    <ellipse cx="200" cy="110" rx="130" ry="100" fill="rgba(136,85,255,0.06)"
+                                        stroke="rgba(136,85,255,0.2)" stroke-width="0.5" />
+                                    <!-- Temperature anomaly zones -->
+                                    <ellipse cx="180" cy="85" rx="60" ry="45" fill="rgba(255,68,34,0.35)" />
+                                    <ellipse cx="160" cy="140" rx="40" ry="30" fill="rgba(255,140,0,0.3)" />
+                                    <ellipse cx="280" cy="100" rx="35" ry="28" fill="rgba(0,136,255,0.3)" />
+                                    <ellipse cx="240" cy="155" rx="28" ry="22" fill="rgba(0,204,102,0.25)" />
+                                    <text x="180" y="82" fill="rgba(255,140,100,1)" font-size="9"
+                                        font-family="monospace" text-anchor="middle">+2.4°C</text>
+                                    <text x="160" y="138" fill="rgba(255,170,80,1)" font-size="8"
+                                        font-family="monospace" text-anchor="middle">+1.8°C</text>
+                                    <text x="280" y="98" fill="rgba(80,170,255,1)" font-size="8" font-family="monospace"
+                                        text-anchor="middle">-1.2°C</text>
+                                    <text x="240" y="153" fill="rgba(80,220,140,1)" font-size="8"
+                                        font-family="monospace" text-anchor="middle">-0.5°C</text>
+                                    <text x="200" y="18" fill="rgba(136,85,255,0.8)" font-size="9"
+                                        font-family="monospace" text-anchor="middle">MONSOON ONSET: JUNE 3 ± 4
+                                        DAYS</text>
+                                    <line x1="40" y1="200" x2="360" y2="200" stroke="rgba(0,200,255,0.15)"
+                                        stroke-width="0.5" />
+                                    <line x1="40" y1="200" x2="40" y2="30" stroke="rgba(0,200,255,0.15)"
+                                        stroke-width="0.5" />
+                                    <path d="M40,170 Q100,140 160,120 Q220,100 280,115 Q320,125 360,140" fill="none"
+                                        stroke="var(--climate)" stroke-width="1.5" opacity="0.7" />
+                                    <path d="M40,170 Q100,155 160,145 Q220,135 280,148 Q320,155 360,162" fill="none"
+                                        stroke="rgba(136,85,255,0.3)" stroke-width="1" stroke-dasharray="3,3" />
+                                    <text x="365" y="141" fill="var(--climate)" font-size="8"
+                                        font-family="monospace">GaiaOS</text>
+                                    <text x="365" y="163" fill="rgba(136,85,255,0.5)" font-size="8"
+                                        font-family="monospace">IMD</text>
+                                </svg>
+                            </div>
+                            <div class="chart-area">
+                                <div class="chart-label">FORECAST SKILL SCORE (Brier Skill Score)</div>
+                                <div class="bar-chart">
+                                    <div class="bc-row">
+                                        <div class="bc-label">GaiaOS</div>
+                                        <div class="bc-track">
+                                            <div class="bc-fill" style="width:82%;background:var(--climate)"></div>
+                                        </div>
+                                        <div class="bc-val">0.82</div>
+                                    </div>
+                                    <div class="bc-row">
+                                        <div class="bc-label">GraphCast</div>
+                                        <div class="bc-track">
+                                            <div class="bc-fill" style="width:91%;background:rgba(136,85,255,0.6)">
+                                            </div>
+                                        </div>
+                                        <div class="bc-val">0.91</div>
+                                    </div>
+                                    <div class="bc-row">
+                                        <div class="bc-label">IMD seasonal</div>
+                                        <div class="bc-track">
+                                            <div class="bc-fill" style="width:58%;background:rgba(100,80,160,0.4)">
+                                            </div>
+                                        </div>
+                                        <div class="bc-val">0.58</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CROP -->
+            <div class="mod-panel" id="panel-crop">
+                <div>
+                    <div class="card">
+                        <div class="card-head">
+                            <span class="card-label">Module 03</span>
+                            <span class="card-badge" style="background:rgba(0,204,102,.15);color:var(--crop)">TEMPORAL
+                                CNN</span>
+                        </div>
+                        <h3 style="color:var(--crop)">Crop Yield Prediction</h3>
+                        <p>Predicts district-level crop yield (wheat, rice, soybean) 6 weeks before harvest for 600+
+                            Indian districts using satellite NDVI time series.</p>
+                        <div class="row-list" style="margin-top:14px">
+                            <div class="row">
+                                <div class="row-key">GOAL</div>
+                                <div class="row-val">Yield forecast per district, 6 weeks before harvest. Output:
+                                    tonnes/hectare ± confidence interval</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">MODEL</div>
+                                <div class="row-val">Two-head ensemble: Temporal CNN on NDVI time series + XGBoost on
+                                    tabular weather/soil. Late fusion with stacking.</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">INPUTS</div>
+                                <div class="row-val">MODIS NDVI weekly 500m, ERA5 rainfall + temperature, SMAP soil
+                                    moisture, crop calendar, IMD monsoon onset</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">LABELS</div>
+                                <div class="row-val">ICRISAT district yield statistics 1966–2017. 600+ districts. Wheat,
+                                    rice, sorghum, groundnut.</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">HARD PART</div>
+                                <div class="row-val">NDVI cloud noise in monsoon season. Implement Savitzky-Golay
+                                    smoothing on NDVI before training. Temporal leakage prevention.</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">DATASETS</div>
+                                <div class="row-val">
+                                    <span class="tag" style="background:rgba(0,204,102,.15);color:var(--crop)">MODIS
+                                        MOD13A1</span>
+                                    <span class="tag" style="background:rgba(0,204,102,.15);color:var(--crop)">SMAP
+                                        Soil</span>
+                                    <span class="tag" style="background:rgba(0,204,102,.15);color:var(--crop)">ICRISAT
+                                        yields</span>
+                                    <span class="tag"
+                                        style="background:rgba(0,204,102,.15);color:var(--crop)">ERA5</span>
+                                    <span class="tag" style="background:rgba(0,204,102,.15);color:var(--crop)">FAO
+                                        India</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">TOOLS</div>
+                                <div class="row-val">xarray · MODIS API · scikit-learn · PyTorch · scipy (SG filter) ·
+                                    geopandas</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">OUTPUT</div>
+                                <div class="row-val">District yield map with % deviation from 5-yr average. Color:
+                                    green=surplus, red=deficit. Exportable CSV.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="card">
+                        <div class="card-label" style="margin-bottom:12px">SAMPLE OUTPUT</div>
+                        <div class="output-box">
+                            <div class="output-topbar">
+                                <div class="dot-r"></div>
+                                <div class="dot-y"></div>
+                                <div class="dot-g"></div>
+                                GaiaOS · Crop Yield · Kharif 2024 · 6-week forecast
+                            </div>
+                            <div class="map-area">
+                                <svg class="map-svg" viewBox="0 0 400 220">
+                                    <rect width="400" height="220" fill="#0a1520" />
+                                    <ellipse cx="200" cy="110" rx="130" ry="100" fill="rgba(0,204,102,0.05)"
+                                        stroke="rgba(0,204,102,0.2)" stroke-width="0.5" />
+                                    <!-- Crop yield deviation zones -->
+                                    <ellipse cx="160" cy="80" rx="50" ry="38" fill="rgba(0,204,102,0.4)" />
+                                    <ellipse cx="270" cy="90" rx="32" ry="25" fill="rgba(0,204,102,0.3)" />
+                                    <ellipse cx="200" cy="140" rx="38" ry="28" fill="rgba(255,170,0,0.35)" />
+                                    <ellipse cx="145" cy="155" rx="25" ry="20" fill="rgba(255,68,34,0.4)" />
+                                    <ellipse cx="305" cy="130" rx="22" ry="18" fill="rgba(255,68,34,0.3)" />
+                                    <text x="160" y="78" fill="rgba(80,240,140,1)" font-size="9" font-family="monospace"
+                                        text-anchor="middle">PUNJAB +12%</text>
+                                    <text x="270" y="88" fill="rgba(80,220,120,1)" font-size="8" font-family="monospace"
+                                        text-anchor="middle">UP +8%</text>
+                                    <text x="200" y="138" fill="rgba(255,200,80,1)" font-size="8"
+                                        font-family="monospace" text-anchor="middle">MP -3%</text>
+                                    <text x="145" y="153" fill="rgba(255,100,80,1)" font-size="8"
+                                        font-family="monospace" text-anchor="middle">KARNATAKA -11%</text>
+                                    <text x="305" y="128" fill="rgba(255,100,80,1)" font-size="8"
+                                        font-family="monospace" text-anchor="middle">ODISHA -7%</text>
+                                    <text x="200" y="205" fill="rgba(0,204,102,0.6)" font-size="8"
+                                        font-family="monospace" text-anchor="middle">National wheat avg: 3.42 t/ha ·
+                                        Forecast: 3.61 t/ha</text>
+                                </svg>
+                            </div>
+                            <div class="chart-area">
+                                <div class="chart-label">YIELD RMSE (kg/hectare) — lower is better</div>
+                                <div class="bar-chart">
+                                    <div class="bc-row">
+                                        <div class="bc-label">GaiaOS</div>
+                                        <div class="bc-track">
+                                            <div class="bc-fill" style="width:82%;background:var(--crop)"></div>
+                                        </div>
+                                        <div class="bc-val">164 kg</div>
+                                    </div>
+                                    <div class="bc-row">
+                                        <div class="bc-label">NDVI-only</div>
+                                        <div class="bc-track">
+                                            <div class="bc-fill" style="width:63%;background:rgba(0,180,80,0.4)"></div>
+                                        </div>
+                                        <div class="bc-val">248 kg</div>
+                                    </div>
+                                    <div class="bc-row">
+                                        <div class="bc-label">FAO avg</div>
+                                        <div class="bc-track">
+                                            <div class="bc-fill" style="width:44%;background:rgba(80,120,80,0.3)"></div>
+                                        </div>
+                                        <div class="bc-val">380 kg</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WILDFIRE -->
+            <div class="mod-panel" id="panel-fire">
+                <div>
+                    <div class="card">
+                        <div class="card-head">
+                            <span class="card-label">Module 04</span>
+                            <span class="card-badge" style="background:rgba(255,68,34,.15);color:var(--fire)">XGBOOST +
+                                CNN</span>
+                        </div>
+                        <h3 style="color:var(--fire)">Wildfire Risk Forecasting</h3>
+                        <p>7-day Fire Weather Index map at 1km resolution for India and Southeast Asia. Trained on 22
+                            years of NASA FIRMS active fire detections.</p>
+                        <div class="row-list" style="margin-top:14px">
+                            <div class="row">
+                                <div class="row-key">GOAL</div>
+                                <div class="row-val">7-day animated fire risk grid at 1km. Top-20 highest-risk districts
+                                    listed with cause breakdown</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">MODEL</div>
+                                <div class="row-val">XGBoost on weather + vegetation tabular features (fast,
+                                    interpretable) + CNN on MODIS veg maps. Calibrated ensemble.</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">INPUTS</div>
+                                <div class="row-val">ERA5: wind speed, relative humidity, temperature, drought code.
+                                    MODIS NDVI fuel load. SRTM slope. Past fire proximity.</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">LABELS</div>
+                                <div class="row-val">NASA FIRMS fire detections 2001–2023. Binary: fire/no-fire per 1km
+                                    cell per day. 22 years of labels.</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">HARD PART</div>
+                                <div class="row-val">0.3% positive class (fires are rare). SMOTE-spatial oversampling +
+                                    isotonic regression calibration for reliable probabilities.</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">DATASETS</div>
+                                <div class="row-val">
+                                    <span class="tag" style="background:rgba(255,68,34,.15);color:var(--fire)">NASA
+                                        FIRMS</span>
+                                    <span class="tag" style="background:rgba(255,68,34,.15);color:var(--fire)">ERA5
+                                        weather</span>
+                                    <span class="tag" style="background:rgba(255,68,34,.15);color:var(--fire)">MODIS
+                                        NDVI</span>
+                                    <span class="tag" style="background:rgba(255,68,34,.15);color:var(--fire)">SRTM
+                                        terrain</span>
+                                    <span class="tag"
+                                        style="background:rgba(255,68,34,.15);color:var(--fire)">Copernicus fuel
+                                        type</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">TOOLS</div>
+                                <div class="row-val">XGBoost · scikit-learn · imbalanced-learn · rasterio · geopandas ·
+                                    folium</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">OUTPUT</div>
+                                <div class="row-val">Animated 7-day risk GIF + static probability map + feature
+                                    importance chart per region</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="card">
+                        <div class="card-label" style="margin-bottom:12px">SAMPLE OUTPUT</div>
+                        <div class="output-box">
+                            <div class="output-topbar">
+                                <div class="dot-r"></div>
+                                <div class="dot-y"></div>
+                                <div class="dot-g"></div>
+                                GaiaOS · Wildfire Risk · +7 Day · India/SEA
+                            </div>
+                            <div class="map-area">
+                                <svg class="map-svg" viewBox="0 0 400 220">
+                                    <rect width="400" height="220" fill="#0a1520" />
+                                    <ellipse cx="200" cy="110" rx="130" ry="100" fill="rgba(255,68,34,0.04)"
+                                        stroke="rgba(255,68,34,0.15)" stroke-width="0.5" />
+                                    <!-- Fire hotspots -->
+                                    <ellipse cx="155" cy="90" rx="40" ry="30" fill="rgba(255,68,34,0.5)" />
+                                    <ellipse cx="240" cy="75" rx="28" ry="22" fill="rgba(255,100,20,0.45)" />
+                                    <ellipse cx="295" cy="115" rx="25" ry="20" fill="rgba(255,170,0,0.4)" />
+                                    <ellipse cx="175" cy="145" rx="30" ry="22" fill="rgba(255,170,0,0.3)" />
+                                    <ellipse cx="125" cy="145" rx="22" ry="16" fill="rgba(255,68,34,0.35)" />
+                                    <!-- Fire dots -->
+                                    <circle cx="150" cy="85" r="3" fill="#ff4422" opacity="0.9" />
+                                    <circle cx="162" cy="95" r="2" fill="#ff6633" opacity="0.8" />
+                                    <circle cx="240" cy="70" r="3" fill="#ff4422" opacity="0.9" />
+                                    <circle cx="250" cy="80" r="2" fill="#ff5533" opacity="0.7" />
+                                    <circle cx="122" cy="148" r="2.5" fill="#ff4422" opacity="0.85" />
+                                    <text x="155" y="88" fill="white" font-size="8" font-family="monospace"
+                                        text-anchor="middle">MADHYA PRADESH</text>
+                                    <text x="155" y="97" fill="rgba(255,100,80,1)" font-size="7" font-family="monospace"
+                                        text-anchor="middle">HIGH 82%</text>
+                                    <text x="240" y="73" fill="white" font-size="7" font-family="monospace"
+                                        text-anchor="middle">JHARKHAND 71%</text>
+                                    <text x="295" y="113" fill="rgba(255,200,80,1)" font-size="7"
+                                        font-family="monospace" text-anchor="middle">ODISHA 48%</text>
+                                    <text x="200" y="205" fill="rgba(255,68,34,0.6)" font-size="8"
+                                        font-family="monospace" text-anchor="middle">22 active fire alerts · Top driver:
+                                        low humidity (34%) + wind 18km/h</text>
+                                </svg>
+                            </div>
+                            <div class="chart-area">
+                                <div class="chart-label">RECALL ON HIGH-SEVERITY EVENTS</div>
+                                <div class="bar-chart">
+                                    <div class="bc-row">
+                                        <div class="bc-label">GaiaOS</div>
+                                        <div class="bc-track">
+                                            <div class="bc-fill" style="width:84%;background:var(--fire)"></div>
+                                        </div>
+                                        <div class="bc-val">0.84</div>
+                                    </div>
+                                    <div class="bc-row">
+                                        <div class="bc-label">FWI Canada</div>
+                                        <div class="bc-track">
+                                            <div class="bc-fill" style="width:72%;background:rgba(220,80,40,0.5)"></div>
+                                        </div>
+                                        <div class="bc-val">0.72</div>
+                                    </div>
+                                    <div class="bc-row">
+                                        <div class="bc-label">NDVI threshold</div>
+                                        <div class="bc-track">
+                                            <div class="bc-fill" style="width:49%;background:rgba(180,60,30,0.3)"></div>
+                                        </div>
+                                        <div class="bc-val">0.49</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TRAFFIC -->
+            <div class="mod-panel" id="panel-traffic">
+                <div>
+                    <div class="card">
+                        <div class="card-head">
+                            <span class="card-label">Module 05</span>
+                            <span class="card-badge" style="background:rgba(255,170,0,.15);color:var(--traffic)">GNN +
+                                U-NET</span>
+                        </div>
+                        <h3 style="color:var(--traffic)">Traffic & City Growth Prediction</h3>
+                        <p>Predicts urban land expansion (5-year horizon) and peak traffic congestion corridors for 10
+                            major Indian cities.</p>
+                        <div class="row-list" style="margin-top:14px">
+                            <div class="row">
+                                <div class="row-key">GOAL</div>
+                                <div class="row-val">5-yr urban growth probability map + daily congestion heat maps for
+                                    Mumbai, Delhi, Bengaluru + 7 more cities</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">MODEL</div>
+                                <div class="row-val">U-Net semantic segmentation on Sentinel-2 time series (urban
+                                    growth) + GNN on road intersection graph (traffic)</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">INPUTS</div>
+                                <div class="row-val">Sentinel-2 bands (B02-B12), OSM road graph topology, Meta HRSL
+                                    population density, VIIRS night-lights radiance</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">LABELS</div>
+                                <div class="row-val">Sentinel-2 urban pixel change 2017→2022. OSM historical edit
+                                    timestamps as proxy for growth areas.</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">HARD PART</div>
+                                <div class="row-val">Slum areas don't look like planned urban in satellite — use focal
+                                    loss + augmentation. GNN requires OSMnx preprocessing for road graph.</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">DATASETS</div>
+                                <div class="row-val">
+                                    <span class="tag"
+                                        style="background:rgba(255,170,0,.15);color:var(--traffic)">Sentinel-2
+                                        L2A</span>
+                                    <span class="tag"
+                                        style="background:rgba(255,170,0,.15);color:var(--traffic)">OpenStreetMap</span>
+                                    <span class="tag" style="background:rgba(255,170,0,.15);color:var(--traffic)">Meta
+                                        HRSL</span>
+                                    <span class="tag" style="background:rgba(255,170,0,.15);color:var(--traffic)">VIIRS
+                                        Night Lights</span>
+                                    <span class="tag" style="background:rgba(255,170,0,.15);color:var(--traffic)">GHSL
+                                        Urban</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">TOOLS</div>
+                                <div class="row-val">PyTorch · segmentation-models-pytorch · OSMnx · PyTorch Geometric ·
+                                    sentinelsat · kepler.gl</div>
+                            </div>
+                            <div class="row">
+                                <div class="row-key">OUTPUT</div>
+                                <div class="row-val">Urban expansion map overlay with crop module to show farmland loss.
+                                    City congestion heatmap by hour of day.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="card">
+                        <div class="card-label" style="margin-bottom:12px">SAMPLE OUTPUT</div>
+                        <div class="output-box">
+                            <div class="output-topbar">
+                                <div class="dot-r"></div>
+                                <div class="dot-y"></div>
+                                <div class="dot-g"></div>
+                                GaiaOS · Urban Growth · Bengaluru · 2024→2029
+                            </div>
+                            <div class="map-area">
+                                <svg class="map-svg" viewBox="0 0 400 220">
+                                    <rect width="400" height="220" fill="#0a1520" />
+                                    <!-- City grid -->
+                                    <rect x="140" y="70" width="120" height="90" rx="4" fill="rgba(255,170,0,0.08)"
+                                        stroke="rgba(255,170,0,0.2)" stroke-width="0.5" />
+                                    <!-- Current urban -->
+                                    <rect x="160" y="85" width="80" height="60" rx="3" fill="rgba(255,170,0,0.25)" />
+                                    <!-- Predicted expansion -->
+                                    <ellipse cx="200" cy="75" rx="35" ry="12" fill="rgba(255,100,0,0.35)"
+                                        stroke="rgba(255,100,0,0.5)" stroke-width="0.5" stroke-dasharray="3,2" />
+                                    <ellipse cx="255" cy="115" rx="15" ry="28" fill="rgba(255,100,0,0.3)"
+                                        stroke="rgba(255,100,0,0.4)" stroke-width="0.5" stroke-dasharray="3,2" />
+                                    <ellipse cx="145" cy="115" rx="18" ry="25" fill="rgba(255,100,0,0.28)"
+                                        stroke="rgba(255,100,0,0.4)" stroke-width="0.5" stroke-dasharray="3,2" />
+                                    <!-- Road graph -->
+                                    <line x1="200" y1="70" x2="200" y2="160" stroke="rgba(255,200,80,0.3)"
+                                        stroke-width="1" />
+                                    <line x1="140" y1="115" x2="260" y2="115" stroke="rgba(255,200,80,0.3)"
+                                        stroke-width="1" />
+                                    <line x1="160" y1="85" x2="240" y2="145" stroke="rgba(255,200,80,0.15)"
+                                        stroke-width="0.5" />
+                                    <!-- Congestion dots -->
+                                    <circle cx="200" cy="95" r="5" fill="rgba(255,68,34,0.8)" />
+                                    <circle cx="200" cy="115" r="4" fill="rgba(255,68,34,0.7)" />
+                                    <circle cx="175" cy="115" r="3" fill="rgba(255,170,0,0.7)" />
+                                    <circle cx="225" cy="115" r="3" fill="rgba(255,170,0,0.6)" />
+                                    <text x="200" y="205" fill="rgba(255,170,0,0.6)" font-size="8"
+                                        font-family="monospace" text-anchor="middle">Urban area +34% by 2029 · Farmland
+                                        loss: 1,240 km² predicted</text>
+                                    <text x="200" y="60" fill="rgba(255,100,0,0.8)" font-size="8"
+                                        font-family="monospace" text-anchor="middle">--- Predicted expansion boundary
+                                        (5yr)</text>
+                                </svg>
+                            </div>
+                            <div class="chart-area">
+                                <div class="chart-label">URBAN GROWTH IOU SCORE</div>
+                                <div class="bar-chart">
+                                    <div class="bc-row">
+                                        <div class="bc-label">GaiaOS</div>
+                                        <div class="bc-track">
+                                            <div class="bc-fill" style="width:79%;background:var(--traffic)"></div>
+                                        </div>
+                                        <div class="bc-val">0.79</div>
+                                    </div>
+                                    <div class="bc-row">
+                                        <div class="bc-label">GHSL proj.</div>
+                                        <div class="bc-track">
+                                            <div class="bc-fill" style="width:64%;background:rgba(200,130,0,0.5)"></div>
+                                        </div>
+                                        <div class="bc-val">0.64</div>
+                                    </div>
+                                    <div class="bc-row">
+                                        <div class="bc-label">Linear extrap.</div>
+                                        <div class="bc-track">
+                                            <div class="bc-fill" style="width:47%;background:rgba(150,100,0,0.3)"></div>
+                                        </div>
+                                        <div class="bc-val">0.47</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DATASETS -->
+        <div class="sec" id="datasets-sec">
+            <div class="sec-title">All Datasets — 100% Free</div>
+            <div class="full-card">
+                <table class="ds-table">
+                    <thead>
+                        <tr>
+                            <th>Dataset</th>
+                            <th>Source</th>
+                            <th>What it contains</th>
+                            <th>Used in</th>
+                            <th>Download URL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="ds-name">ERA5 Reanalysis</div>
+                            </td>
+                            <td>
+                                <div class="ds-src">ECMWF / Copernicus</div>
+                            </td>
+                            <td>Hourly global weather 1940–now. Temp, wind, rain, humidity at 31km grid.</td>
+                            <td><span class="tag"
+                                    style="background:rgba(0,136,255,.15);color:var(--flood)">Flood</span><span
+                                    class="tag"
+                                    style="background:rgba(136,85,255,.15);color:var(--climate)">Climate</span><span
+                                    class="tag"
+                                    style="background:rgba(0,204,102,.15);color:var(--crop)">Crop</span><span
+                                    class="tag" style="background:rgba(255,68,34,.15);color:var(--fire)">Fire</span>
+                            </td>
+                            <td>
+                                <div class="ds-src">cds.climate.copernicus.eu</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ds-name">IMD Gridded Data</div>
+                            </td>
+                            <td>
+                                <div class="ds-src">India Met Dept</div>
+                            </td>
+                            <td>Daily rainfall + temp grids across India 1901–present. District-level statistics.</td>
+                            <td><span class="tag"
+                                    style="background:rgba(0,136,255,.15);color:var(--flood)">Flood</span><span
+                                    class="tag"
+                                    style="background:rgba(136,85,255,.15);color:var(--climate)">Climate</span><span
+                                    class="tag" style="background:rgba(0,204,102,.15);color:var(--crop)">Crop</span>
+                            </td>
+                            <td>
+                                <div class="ds-src">imdpune.gov.in</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ds-name">MODIS MOD13A1</div>
+                            </td>
+                            <td>
+                                <div class="ds-src">NASA Terra</div>
+                            </td>
+                            <td>16-day NDVI + EVI at 500m. Vegetation health, burned area, land cover.</td>
+                            <td><span class="tag"
+                                    style="background:rgba(0,204,102,.15);color:var(--crop)">Crop</span><span
+                                    class="tag" style="background:rgba(255,68,34,.15);color:var(--fire)">Fire</span>
+                            </td>
+                            <td>
+                                <div class="ds-src">earthdata.nasa.gov</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ds-name">Sentinel-1 SAR</div>
+                            </td>
+                            <td>
+                                <div class="ds-src">ESA Copernicus</div>
+                            </td>
+                            <td>C-band radar, sees through clouds, 10m resolution. Flood inundation mapping.</td>
+                            <td><span class="tag" style="background:rgba(0,136,255,.15);color:var(--flood)">Flood</span>
+                            </td>
+                            <td>
+                                <div class="ds-src">scihub.copernicus.eu</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ds-name">Sentinel-2 MSI</div>
+                            </td>
+                            <td>
+                                <div class="ds-src">ESA Copernicus</div>
+                            </td>
+                            <td>13-band optical, 10m. Urban classification, vegetation, water bodies.</td>
+                            <td><span class="tag"
+                                    style="background:rgba(255,170,0,.15);color:var(--traffic)">Traffic</span><span
+                                    class="tag" style="background:rgba(0,204,102,.15);color:var(--crop)">Crop</span>
+                            </td>
+                            <td>
+                                <div class="ds-src">scihub.copernicus.eu</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ds-name">SRTM DEM</div>
+                            </td>
+                            <td>
+                                <div class="ds-src">NASA / USGS</div>
+                            </td>
+                            <td>90m global elevation. Slope, aspect, flow accumulation for flood routing.</td>
+                            <td><span class="tag"
+                                    style="background:rgba(0,136,255,.15);color:var(--flood)">Flood</span><span
+                                    class="tag" style="background:rgba(255,68,34,.15);color:var(--fire)">Fire</span>
+                            </td>
+                            <td>
+                                <div class="ds-src">earthexplorer.usgs.gov</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ds-name">NASA FIRMS</div>
+                            </td>
+                            <td>
+                                <div class="ds-src">NASA LANCE</div>
+                            </td>
+                            <td>Near-real-time active fire detections from MODIS+VIIRS. Archive 2001–now.</td>
+                            <td><span class="tag" style="background:rgba(255,68,34,.15);color:var(--fire)">Fire</span>
+                            </td>
+                            <td>
+                                <div class="ds-src">firms.modaps.eosdis.nasa.gov</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ds-name">SMAP Soil Moisture</div>
+                            </td>
+                            <td>
+                                <div class="ds-src">NASA JPL</div>
+                            </td>
+                            <td>Global daily soil moisture 36km. Saturation = flood risk. Drought stress = crop risk.
+                            </td>
+                            <td><span class="tag"
+                                    style="background:rgba(0,136,255,.15);color:var(--flood)">Flood</span><span
+                                    class="tag" style="background:rgba(0,204,102,.15);color:var(--crop)">Crop</span>
+                            </td>
+                            <td>
+                                <div class="ds-src">earthdata.nasa.gov</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ds-name">ICRISAT District Data</div>
+                            </td>
+                            <td>
+                                <div class="ds-src">ICRISAT</div>
+                            </td>
+                            <td>Crop yield for 600+ Indian districts, 1966–2017. Wheat, rice, groundnut, sorghum.</td>
+                            <td><span class="tag" style="background:rgba(0,204,102,.15);color:var(--crop)">Crop</span>
+                            </td>
+                            <td>
+                                <div class="ds-src">icrisat.org/jodha-nansen</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ds-name">OpenStreetMap + Meta HRSL</div>
+                            </td>
+                            <td>
+                                <div class="ds-src">OSM / Meta AI</div>
+                            </td>
+                            <td>Road network graph. 30m population density maps for all of India.</td>
+                            <td><span class="tag"
+                                    style="background:rgba(255,170,0,.15);color:var(--traffic)">Traffic</span></td>
+                            <td>
+                                <div class="ds-src">data.humdata.org</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ds-name">VIIRS Night Lights</div>
+                            </td>
+                            <td>
+                                <div class="ds-src">NOAA</div>
+                            </td>
+                            <td>Monthly night-light radiance. Proxy for urban activity and electricity access.</td>
+                            <td><span class="tag"
+                                    style="background:rgba(255,170,0,.15);color:var(--traffic)">Traffic</span></td>
+                            <td>
+                                <div class="ds-src">ngdc.noaa.gov/eog/viirs</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ds-name">GloFAS River Discharge</div>
+                            </td>
+                            <td>
+                                <div class="ds-src">EU Copernicus</div>
+                            </td>
+                            <td>Global river discharge forecasts. River levels drive flood risk in adjacent districts.
+                            </td>
+                            <td><span class="tag" style="background:rgba(0,136,255,.15);color:var(--flood)">Flood</span>
+                            </td>
+                            <td>
+                                <div class="ds-src">globalfloods.eu</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TOOLS -->
+        <div class="sec" id="tools-sec">
+            <div class="sec-title">Complete Tool Stack</div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--flood)">Data Core</div>
+                    <div class="tool-name">pandas + numpy</div>
+                    <div class="tool-desc">Tabular data manipulation. Your daily driver. Already know these.</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--flood)">Multi-dim Arrays</div>
+                    <div class="tool-name">xarray</div>
+                    <div class="tool-desc">Like pandas but for 4D grids (lat × lon × time × variable). Essential for
+                        ERA5.</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--flood)">Geospatial</div>
+                    <div class="tool-name">geopandas</div>
+                    <div class="tool-desc">Pandas with geometry. District boundaries, spatial joins, choropleth maps.
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--flood)">Raster I/O</div>
+                    <div class="tool-name">rasterio</div>
+                    <div class="tool-desc">Read/write satellite rasters (.tif, .nc). Reproject, resample, clip to India
+                        bounds.</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--flood)">Satellite API</div>
+                    <div class="tool-name">cdsapi</div>
+                    <div class="tool-desc">Python client for Copernicus CDS. Download ERA5 with 5 lines of code.</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--climate)">Deep Learning</div>
+                    <div class="tool-name">PyTorch</div>
+                    <div class="tool-desc">Build ConvLSTM, U-Net, Swin Transformer. Free GPU on Kaggle.</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--climate)">Model Zoo</div>
+                    <div class="tool-name">timm</div>
+                    <div class="tool-desc">1000+ pretrained vision models. Get Swin-Tiny pretrained weights free.</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--climate)">Segmentation</div>
+                    <div class="tool-name">smp (seg-models-pt)</div>
+                    <div class="tool-desc">Pretrained U-Net, DeepLabV3+, FPN. Plug-and-play for flood + urban modules.
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--climate)">Tensor ops</div>
+                    <div class="tool-name">einops</div>
+                    <div class="tool-desc">Clean tensor reshaping. Makes spatiotemporal code readable.</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--crop)">ML Tabular</div>
+                    <div class="tool-name">XGBoost</div>
+                    <div class="tool-desc">Your best friend for Phase 1 of every module. Fast, interpretable, powerful.
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--crop)">ML Tabular</div>
+                    <div class="tool-name">LightGBM</div>
+                    <div class="tool-desc">Faster than XGBoost on large datasets. Good for crop + wildfire modules.
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--crop)">Imbalanced</div>
+                    <div class="tool-name">imbalanced-learn</div>
+                    <div class="tool-desc">SMOTE oversampling for wildfire (0.3% positive class). Critical.</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--fire)">Graph ML</div>
+                    <div class="tool-name">PyTorch Geometric</div>
+                    <div class="tool-desc">GNN for traffic module. Road intersections as nodes, roads as edges.</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--fire)">Road Graphs</div>
+                    <div class="tool-name">OSMnx</div>
+                    <div class="tool-desc">Download + analyze OpenStreetMap road networks as NetworkX graphs.</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--fire)">SAR Processing</div>
+                    <div class="tool-name">ESA SNAP</div>
+                    <div class="tool-desc">Sentinel-1 preprocessing: speckle filter, terrain correction, geocoding.
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--traffic)">Interactive Maps</div>
+                    <div class="tool-name">folium</div>
+                    <div class="tool-desc">Python → Leaflet.js maps. Choropleth overlays for all 5 prediction modules.
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--traffic)">3D Maps</div>
+                    <div class="tool-name">kepler.gl</div>
+                    <div class="tool-desc">Stunning animated geospatial maps. Used by Uber. Best visual impact for demo.
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--traffic)">Charts</div>
+                    <div class="tool-name">plotly</div>
+                    <div class="tool-desc">Interactive time-series charts, scatter maps, bar charts for the dashboard.
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--accent2)">Website</div>
+                    <div class="tool-name">Streamlit</div>
+                    <div class="tool-desc">Build the entire website in pure Python. 200 lines. Deploy on HF Spaces free.
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--accent2)">API</div>
+                    <div class="tool-name">FastAPI</div>
+                    <div class="tool-desc">Serve model predictions as REST API. One endpoint per module.</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--accent2)">Hosting</div>
+                    <div class="tool-name">Hugging Face Spaces</div>
+                    <div class="tool-desc">Free permanent hosting for Streamlit apps. Public URL for your resume.</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--accent2)">Tracking</div>
+                    <div class="tool-name">Weights & Biases</div>
+                    <div class="tool-desc">Log every training run. Compare models. Free for students. Shows discipline.
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--accent2)">Versioning</div>
+                    <div class="tool-name">DVC</div>
+                    <div class="tool-desc">Git for large datasets. Track which data produced which model. Critical for
+                        reproducibility.</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-cat" style="color:var(--accent2)">Free GPU</div>
+                    <div class="tool-name">Kaggle Notebooks</div>
+                    <div class="tool-desc">30hr/week free T4 GPU. Use from Phase 5 onwards. No setup needed.</div>
+                </div>
+            </div>
+
+            <div style="margin-top:20px">
+                <div class="sec-title">One-Command Install</div>
+                <div class="install-block">
+                    <div class="install-bar">terminal · bash</div>
+                    <div class="install-code">
+                        <span class="cm"># Create isolated environment</span><br>
+                        <span class="kw">conda</span> create -n gaiaos <span class="str">python=3.11</span> -y<br>
+                        <span class="kw">conda</span> activate gaiaos<br><br>
+                        <span class="cm"># Core data stack</span><br>
+                        <span class="kw">pip install</span> numpy pandas xarray dask netCDF4 h5py<br><br>
+                        <span class="cm"># Geospatial</span><br>
+                        <span class="kw">pip install</span> geopandas rasterio shapely fiona pyproj regionmask<br><br>
+                        <span class="cm"># Machine learning</span><br>
+                        <span class="kw">pip install</span> scikit-learn xgboost lightgbm catboost
+                        imbalanced-learn<br><br>
+                        <span class="cm"># Deep learning</span><br>
+                        <span class="kw">pip install</span> torch torchvision einops timm
+                        segmentation-models-pytorch<br>
+                        <span class="kw">pip install</span> torch-geometric<br><br>
+                        <span class="cm"># Satellite data</span><br>
+                        <span class="kw">pip install</span> cdsapi sentinelsat earthengine-api pystac odc-stac<br><br>
+                        <span class="cm"># Visualization + web</span><br>
+                        <span class="kw">pip install</span> matplotlib seaborn plotly folium cartopy keplergl<br>
+                        <span class="kw">pip install</span> streamlit fastapi uvicorn gradio<br><br>
+                        <span class="cm"># Experiment tracking</span><br>
+                        <span class="kw">pip install</span> wandb mlflow dvc<br><br>
+                        <span class="cm"># Notebook</span><br>
+                        <span class="kw">pip install</span> jupyter notebook ipywidgets osmnx
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WEBSITE -->
+        <div class="sec" id="website-sec">
+            <div class="sec-title">How to Build the Website</div>
+            <div class="website-grid">
+                <div class="ws-card">
+                    <div class="ws-preview">
+                        <svg viewBox="0 0 280 130" width="280" height="130">
+                            <rect width="280" height="130" fill="#0a1520" />
+                            <rect x="0" y="0" width="280" height="28" fill="#0d1b27" stroke="rgba(0,200,255,0.2)"
+                                stroke-width="0.5" />
+                            <text x="12" y="17" fill="rgba(0,200,255,0.8)" font-size="10" font-family="monospace"
+                                font-weight="bold">GaiaOS</text>
+                            <text x="80" y="17" fill="rgba(100,160,180,0.7)" font-size="8" font-family="monospace">Flood
+                                Climate Crop Fire Traffic</text>
+                            <ellipse cx="140" cy="85" rx="90" ry="38" fill="rgba(0,200,255,0.05)"
+                                stroke="rgba(0,200,255,0.15)" stroke-width="0.5" />
+                            <ellipse cx="120" cy="80" rx="25" ry="18" fill="rgba(255,68,34,0.4)" />
+                            <ellipse cx="165" cy="72" rx="18" ry="14" fill="rgba(255,170,0,0.35)" />
+                            <ellipse cx="145" cy="95" rx="22" ry="14" fill="rgba(0,136,255,0.3)" />
+                            <text x="140" y="122" fill="rgba(0,200,255,0.5)" font-size="7" font-family="monospace"
+                                text-anchor="middle">Live map · 5 prediction layers · toggle risk overlays</text>
+                        </svg>
+                    </div>
+                    <div class="ws-info">
+                        <div class="ws-title">Page 1 — Live Prediction Map</div>
+                        <div class="ws-desc">India map with 5 toggle layers. Real-time color-coded risk overlays. Date
+                            picker for forecast horizon. First thing visitors see.</div>
+                    </div>
+                </div>
+                <div class="ws-card">
+                    <div class="ws-preview">
+                        <svg viewBox="0 0 280 130" width="280" height="130">
+                            <rect width="280" height="130" fill="#0a1520" />
+                            <rect x="10" y="10" width="120" height="50" rx="6" fill="#0d1b27"
+                                stroke="rgba(0,136,255,0.3)" stroke-width="0.5" />
+                            <text x="70" y="30" fill="rgba(0,136,255,1)" font-size="9" font-family="monospace"
+                                text-anchor="middle" font-weight="bold">FLOOD MODULE</text>
+                            <text x="70" y="44" fill="rgba(100,160,200,0.7)" font-size="7" font-family="monospace"
+                                text-anchor="middle">AUC: 0.87 · Model: ConvLSTM</text>
+                            <text x="70" y="54" fill="rgba(100,160,200,0.7)" font-size="7" font-family="monospace"
+                                text-anchor="middle">Data: ERA5 + SAR + SRTM</text>
+                            <rect x="150" y="10" width="120" height="50" rx="6" fill="#0d1b27"
+                                stroke="rgba(136,85,255,0.3)" stroke-width="0.5" />
+                            <text x="210" y="30" fill="rgba(136,85,255,1)" font-size="9" font-family="monospace"
+                                text-anchor="middle" font-weight="bold">CLIMATE MODULE</text>
+                            <text x="210" y="44" fill="rgba(160,130,220,0.7)" font-size="7" font-family="monospace"
+                                text-anchor="middle">BSS: 0.82 · Model: Swin-T</text>
+                            <text x="210" y="54" fill="rgba(160,130,220,0.7)" font-size="7" font-family="monospace"
+                                text-anchor="middle">Data: ERA5 + SST + CHIRPS</text>
+                            <text x="140" y="90" fill="rgba(0,200,255,0.5)" font-size="8" font-family="monospace"
+                                text-anchor="middle">+ 3 more module cards...</text>
+                        </svg>
+                    </div>
+                    <div class="ws-info">
+                        <div class="ws-title">Page 2 — Module Cards</div>
+                        <div class="ws-desc">One card per module with model accuracy, dataset sources, methodology
+                            summary, and live forecast snapshot.</div>
+                    </div>
+                </div>
+                <div class="ws-card">
+                    <div class="ws-preview">
+                        <svg viewBox="0 0 280 130" width="280" height="130">
+                            <rect width="280" height="130" fill="#0a1520" />
+                            <rect x="10" y="10" width="60" height="50" rx="4" fill="#0d1b27"
+                                stroke="rgba(0,200,255,0.2)" stroke-width="0.5" />
+                            <text x="40" y="30" fill="var(--accent)" font-size="16" font-family="monospace"
+                                text-anchor="middle" font-weight="bold">87</text>
+                            <text x="40" y="42" fill="rgba(100,160,180,0.7)" font-size="7" font-family="monospace"
+                                text-anchor="middle">alerts today</text>
+                            <rect x="80" y="10" width="60" height="50" rx="4" fill="#0d1b27"
+                                stroke="rgba(255,68,34,0.2)" stroke-width="0.5" />
+                            <text x="110" y="30" fill="var(--fire)" font-size="16" font-family="monospace"
+                                text-anchor="middle" font-weight="bold">22</text>
+                            <text x="110" y="42" fill="rgba(180,100,80,0.7)" font-size="7" font-family="monospace"
+                                text-anchor="middle">fire alerts</text>
+                            <rect x="150" y="10" width="60" height="50" rx="4" fill="#0d1b27"
+                                stroke="rgba(0,204,102,0.2)" stroke-width="0.5" />
+                            <text x="180" y="30" fill="var(--crop)" font-size="16" font-family="monospace"
+                                text-anchor="middle" font-weight="bold">+8%</text>
+                            <text x="180" y="42" fill="rgba(80,180,100,0.7)" font-size="7" font-family="monospace"
+                                text-anchor="middle">crop surplus</text>
+                            <rect x="220" y="10" width="50" height="50" rx="4" fill="#0d1b27"
+                                stroke="rgba(255,170,0,0.2)" stroke-width="0.5" />
+                            <text x="245" y="30" fill="var(--traffic)" font-size="14" font-family="monospace"
+                                text-anchor="middle" font-weight="bold">3</text>
+                            <text x="245" y="44" fill="rgba(180,130,0,0.7)" font-size="7" font-family="monospace"
+                                text-anchor="middle">flood zones</text>
+                            <path d="M10,80 Q50,65 90,70 Q130,75 170,60 Q210,45 270,55" fill="none"
+                                stroke="rgba(0,200,255,0.5)" stroke-width="1.5" />
+                            <path d="M10,80 Q50,82 90,85 Q130,88 170,84 Q210,80 270,78" fill="none"
+                                stroke="rgba(255,68,34,0.3)" stroke-width="1" stroke-dasharray="3,2" />
+                        </svg>
+                    </div>
+                    <div class="ws-info">
+                        <div class="ws-title">Page 3 — Dashboard</div>
+                        <div class="ws-desc">Summary metrics: active alerts today, trend charts, highest-risk districts,
+                            7-day forecast timeline across all modules.</div>
+                    </div>
+                </div>
+                <div class="ws-card">
+                    <div class="ws-preview">
+                        <svg viewBox="0 0 280 130" width="280" height="130">
+                            <rect width="280" height="130" fill="#0a1520" />
+                            <circle cx="50" cy="45" r="28" fill="rgba(0,200,255,0.1)" stroke="rgba(0,200,255,0.3)"
+                                stroke-width="1" />
+                            <text x="50" y="40" fill="rgba(0,200,255,0.8)" font-size="8" font-family="monospace"
+                                text-anchor="middle">YOUR</text>
+                            <text x="50" y="52" fill="rgba(0,200,255,0.8)" font-size="8" font-family="monospace"
+                                text-anchor="middle">PHOTO</text>
+                            <text x="110" y="30" fill="var(--text)" font-size="11" font-family="monospace"
+                                font-weight="bold">GaiaOS Project</text>
+                            <text x="110" y="44" fill="rgba(100,160,180,0.7)" font-size="8" font-family="monospace">Data
+                                Science · IIT / VIT / Any college</text>
+                            <text x="110" y="58" fill="rgba(0,200,255,0.6)" font-size="8"
+                                font-family="monospace">github.com/yourname/gaiaos</text>
+                            <text x="110" y="70" fill="rgba(0,255,157,0.6)" font-size="8"
+                                font-family="monospace">arxiv.org/abs/2024.xxxxx</text>
+                            <text x="14" y="100" fill="rgba(100,160,180,0.6)" font-size="8"
+                                font-family="monospace">Built with: ERA5 · MODIS · Sentinel · SMAP · FIRMS</text>
+                            <text x="14" y="115" fill="rgba(100,160,180,0.6)" font-size="8"
+                                font-family="monospace">Models: XGBoost · ConvLSTM · Swin-T · U-Net · GNN</text>
+                        </svg>
+                    </div>
+                    <div class="ws-info">
+                        <div class="ws-title">Page 4 — About + Research</div>
+                        <div class="ws-desc">Your profile, GitHub link, arXiv preprint link, methodology. This is your
+                            public research identity. Recruiters land here.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:16px">
+                <div class="sec-title">Streamlit Starter Code</div>
+                <div class="install-block">
+                    <div class="install-bar">app.py · Streamlit · ~200 lines total</div>
+                    <div class="install-code">
+                        <span class="kw">import</span> streamlit <span class="kw">as</span> st<br>
+                        <span class="kw">import</span> folium, plotly.express <span class="kw">as</span> px<br>
+                        <span class="kw">from</span> streamlit_folium <span class="kw">import</span> st_folium<br>
+                        <span class="kw">import</span> pandas <span class="kw">as</span> pd, numpy <span
+                            class="kw">as</span> np<br><br>
+                        st.set_page_config(page_title=<span class="str">"GaiaOS"</span>, layout=<span
+                            class="str">"wide"</span>)<br><br>
+                        <span class="cm"># Sidebar controls</span><br>
+                        module = st.sidebar.selectbox(<span class="str">"Module"</span>, [<span
+                            class="str">"Flood"</span>, <span class="str">"Climate"</span>, <span
+                            class="str">"Crop"</span>, <span class="str">"Wildfire"</span>, <span
+                            class="str">"Traffic"</span>])<br>
+                        date = st.sidebar.date_input(<span class="str">"Forecast date"</span>)<br>
+                        thresh = st.sidebar.slider(<span class="str">"Risk threshold"</span>, 0, 100, 50)<br><br>
+                        <span class="cm"># Load predictions (your model output CSVs)</span><br>
+                        df = pd.read_csv(<span class="str">f"predictions/{module.lower()}_latest.csv"</span>)<br><br>
+                        <span class="cm"># India risk map</span><br>
+                        m = folium.Map(location=[<span class="str">20.5</span>, <span class="str">78.9</span>],
+                        zoom_start=<span class="str">5</span>)<br>
+                        folium.Choropleth(geo_data=<span class="str">"india_districts.geojson"</span>,<br>
+                        data=df, columns=[<span class="str">"district"</span>, <span class="str">"risk"</span>],<br>
+                        fill_color=<span class="str">"RdYlGn_r"</span>, legend_name=<span class="str">f"{module} Risk
+                            %"</span>).add_to(m)<br>
+                        st_folium(m, width=<span class="str">800</span>, height=<span class="str">500</span>)<br><br>
+                        <span class="cm"># Metrics row</span><br>
+                        col1, col2, col3 = st.columns(3)<br>
+                        col1.metric(<span class="str">"High-risk districts"</span>, len(df[df.risk &gt; thresh]))<br>
+                        col2.metric(<span class="str">"Max risk"</span>, <span
+                            class="str">f"{df.risk.max():.0f}%"</span>)<br>
+                        col3.metric(<span class="str">"Model AUC"</span>, <span class="str">"0.87"</span>)<br><br>
+                        <span class="cm"># Deploy free: push to huggingface.co/spaces</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIMELINE -->
+        <div class="sec" id="timeline-sec">
+            <div class="sec-title">9-Month Build Timeline</div>
+            <div class="full-card">
+                <div class="timeline">
+                    <div class="tl-item">
+                        <div class="tl-dot active"></div>
+                        <div class="tl-month">MONTHS 1–2 · START HERE</div>
+                        <div class="tl-title">Foundation + Flood Module Phase 1</div>
+                        <div class="tl-desc">Install environment · Register Copernicus CDS · Download Kerala 2018 CSV +
+                            ERA5 rainfall · Build XGBoost flood model · First GitHub commit · Deploy skeleton Streamlit
+                            app on Hugging Face Spaces</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot"></div>
+                        <div class="tl-month">MONTH 3</div>
+                        <div class="tl-title">Flood Module Complete (ConvLSTM)</div>
+                        <div class="tl-desc">Add Sentinel-1 SAR + SRTM elevation · Build ConvLSTM flood model on Kaggle
+                            GPU · 72-hour probability maps animated · Benchmark vs IMD baseline · Live flood map on
+                            website</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot"></div>
+                        <div class="tl-month">MONTH 4</div>
+                        <div class="tl-title">Wildfire Module</div>
+                        <div class="tl-desc">Download NASA FIRMS 2001–2023 · Engineer Fire Weather Index features ·
+                            XGBoost + CNN ensemble · Handle 0.3% class imbalance with SMOTE · 7-day risk maps added to
+                            website</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot"></div>
+                        <div class="tl-month">MONTH 5</div>
+                        <div class="tl-title">Crop Yield Module</div>
+                        <div class="tl-desc">MODIS NDVI time series download · ICRISAT labels · Savitzky-Golay NDVI
+                            smoothing · Temporal CNN · District-level yield predictions · Kharif 2023 backtesting</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot"></div>
+                        <div class="tl-month">MONTH 6</div>
+                        <div class="tl-title">Climate Pattern Module</div>
+                        <div class="tl-desc">ERA5 multi-level pressure data · Swin Transformer training on Kaggle ·
+                            Monsoon onset prediction · 30-day anomaly maps · Add to website as 4th module</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot"></div>
+                        <div class="tl-month">MONTH 7</div>
+                        <div class="tl-title">Traffic & Urban Growth Module</div>
+                        <div class="tl-desc">OSMnx road graph for 10 cities · Sentinel-2 urban classification · U-Net
+                            training · GNN traffic model · 5-year expansion maps for Bengaluru, Mumbai, Delhi</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot"></div>
+                        <div class="tl-month">MONTH 8</div>
+                        <div class="tl-title">Shared Encoder Upgrade</div>
+                        <div class="tl-desc">Merge all 5 module encoders into shared backbone · Multi-task loss function
+                            · Cross-domain correlation maps (flood↔crop↔climate) · Full benchmark table comparing all
+                            baselines</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot"></div>
+                        <div class="tl-month">MONTH 9 · LAUNCH</div>
+                        <div class="tl-title">Deploy + Publish + Apply</div>
+                        <div class="tl-desc">Full 4-page website live · Clean GitHub with 9 months of commits · 4-page
+                            arXiv preprint submitted · LinkedIn post with demo video · Apply: Google DeepMind, NVIDIA
+                            Earth-2, Microsoft AI for Good, Amazon AWS Science, CERN openlab internships</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sec-title" style="margin-top:24px">What You'll Have at the End</div>
+            <div class="output-grid">
+                <div class="out-card">
+                    <div class="out-icon" style="color:var(--accent)">◎</div>
+                    <div class="out-title">Live Website</div>
+                    <div class="out-desc">Public URL with 5 interactive prediction maps. Always-on, free on Hugging Face
+                        Spaces.</div>
+                </div>
+                <div class="out-card">
+                    <div class="out-icon" style="color:var(--accent2)">◈</div>
+                    <div class="out-title">GitHub Repo</div>
+                    <div class="out-desc">Clean code, 9 months of commits, full README, reproducible with one command.
+                    </div>
+                </div>
+                <div class="out-card">
+                    <div class="out-icon" style="color:var(--climate)">◇</div>
+                    <div class="out-title">arXiv Preprint</div>
+                    <div class="out-desc">Your name on a published paper. Permanent, citable. Rare for undergrads.</div>
+                </div>
+                <div class="out-card">
+                    <div class="out-icon" style="color:var(--fire)">◆</div>
+                    <div class="out-title">Benchmark Table</div>
+                    <div class="out-desc">GaiaOS vs IMD vs naive baseline. Honest results. Scientific credibility.</div>
+                </div>
+                <div class="out-card">
+                    <div class="out-icon" style="color:var(--traffic)">◉</div>
+                    <div class="out-title">Interview Story</div>
+                    <div class="out-desc">"I built a 5-domain Earth digital twin on public data as a student." No one
+                        else has this story.</div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function selMod(key) {
+            document.querySelectorAll('.mod-tab').forEach(t => t.classList.remove('on'));
+            document.querySelectorAll('.mod-panel').forEach(p => p.classList.remove('on'));
+            document.querySelector(`.mod-tab[data-m="${key}"]`).classList.add('on');
+            document.getElementById(`panel-${key}`).classList.add('on');
+            // animate bars
+            setTimeout(() => {
+                document.querySelectorAll('.bc-fill').forEach(b => {
+                    const w = b.style.width;
+                    b.style.width = '0';
+                    setTimeout(() => { b.style.width = w; }, 50);
+                });
+            }, 100);
+        }
+
+        // Animate bars on load
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.bc-fill').forEach(b => {
+                const w = b.style.width;
+                b.style.width = '0';
+                setTimeout(() => { b.style.width = w; }, 300);
+            });
+        });
+    </script>
+</body>
+
+</html>
