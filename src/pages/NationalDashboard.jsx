@@ -71,7 +71,7 @@ const NationalDashboard = () => {
     setLoading(true);
     setData(null);
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || '/api';
       const res = await fetch(`${baseUrl}/predict?module=${moduleId}&lat=${loc.lat}&lon=${loc.lon}&location=${loc.name}`);
       const result = await res.json();
       setData(result);
@@ -85,7 +85,7 @@ const NationalDashboard = () => {
   const fetchApiStatus = async () => {
     setLoading(true);
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || '/api';
       const res = await fetch(`${baseUrl}/status`);
       const result = await res.json();
       setApiStatus(result);

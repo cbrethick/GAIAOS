@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "functions": {
+    "api/*.py": {
+      "runtime": "vercel-python@0.1.1"
+    }
+  },
+  "installCommand": "npm install && pip install -r requirements.txt"
+}
