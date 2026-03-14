@@ -38,7 +38,8 @@ const NationalDashboard = () => {
 
     setLoading(true);
     try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery + ', India')}&limit=1&addressdetails=1`);
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
+      const res = await fetch(`${baseUrl}/search?q=${encodeURIComponent(searchQuery)}`);
       const results = await res.json();
       
       if (results && results.length > 0) {
@@ -71,7 +72,7 @@ const NationalDashboard = () => {
     setLoading(true);
     setData(null);
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL || '/api';
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
       const res = await fetch(`${baseUrl}/predict?module=${moduleId}&lat=${loc.lat}&lon=${loc.lon}&location=${loc.name}`);
       const result = await res.json();
       setData(result);
@@ -85,7 +86,7 @@ const NationalDashboard = () => {
   const fetchApiStatus = async () => {
     setLoading(true);
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL || '/api';
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
       const res = await fetch(`${baseUrl}/status`);
       const result = await res.json();
       setApiStatus(result);

@@ -78,6 +78,24 @@ app.get('/api/predict', async (req, res) => {
   }
 });
 
+app.get('/api/search', async (req, res) => {
+  const { q } = req.query;
+  if (!q) return res.status(400).json({ error: 'Query parameter "q" is required' });
+
+  try {
+    const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q + ', India')}&limit=1&addressdetails=1`, {
+      headers: {
+        'User-Agent': 'GaiaOS-Dashboard'
+      }
+    });
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    console.error("Geocoding proxy error:", err);
+    res.status(500).json({ error: 'Failed to fetch location data' });
+  }
+});
+
 app.get('/api/status', async (req, res) => {
   try {
     const statusResult = await runPythonModule('status', 0, 0); // Need to handle status in bridge.py or just return online
